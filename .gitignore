@@ -12,3 +12,8 @@ dist-ssr
 # Originalbilder vom Fotografen (werden als WebPs nach public/images/locations/ konvertiert)
 Assets/
 Prompt/03-Alle-Bilder/
+
+# TypeScript build artifacts
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
