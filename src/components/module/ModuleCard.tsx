@@ -7,12 +7,16 @@ interface Props {
   index?: number; // optional 1-based index for chapter label
 }
 
+/**
+ * Vertical card for a module — same visual rhythm as the original area
+ * tiles (chapter number, title, arrow, spec bullets below). Image uses
+ * a fixed 16:10 aspect ratio with object-cover so all tiles align.
+ */
 export function ModuleCard({ module, onOpen, index }: Props) {
   const hasVariants = module.variants.length > 1;
   const previewVariant = module.variants[0];
   const previewImage = previewVariant?.images[0];
-  const num =
-    typeof index === 'number' ? String(index).padStart(2, '0') : null;
+  const num = typeof index === 'number' ? String(index).padStart(2, '0') : null;
 
   return (
     <button
@@ -20,7 +24,8 @@ export function ModuleCard({ module, onOpen, index }: Props) {
       onClick={() => onOpen(module)}
       className="arrow-link group flex h-full flex-col text-left transition-colors duration-200 hover:bg-white/[0.025]"
     >
-      <div className="relative">
+      {/* Image — fixed 16:10 aspect ratio */}
+      <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16 / 10' }}>
         <PlaceholderImage
           src={previewImage?.url ?? ''}
           alt={previewImage?.alt ?? module.name}
@@ -29,15 +34,7 @@ export function ModuleCard({ module, onOpen, index }: Props) {
             'linear-gradient(135deg, #1a2228 0%, #0a0e12 100%)'
           }
           fallbackLabel={module.name.toUpperCase()}
-          className="h-[220px] w-full sm:h-[260px] lg:h-[300px]"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(180deg, rgba(10,10,10,0.05) 0%, rgba(10,10,10,0.55) 100%)',
-          }}
+          className="absolute inset-0 h-full w-full"
         />
         {hasVariants && (
           <span
@@ -56,7 +53,8 @@ export function ModuleCard({ module, onOpen, index }: Props) {
         )}
       </div>
 
-      <div className="flex flex-1 flex-col gap-3 px-6 py-7">
+      {/* Text block */}
+      <div className="flex flex-1 flex-col gap-5 px-7 py-8">
         {num && (
           <div className="flex items-center gap-3">
             <span
@@ -71,7 +69,7 @@ export function ModuleCard({ module, onOpen, index }: Props) {
             </span>
             <span
               aria-hidden
-              className="h-px w-6"
+              className="h-px w-8"
               style={{ backgroundColor: 'rgba(255,255,255,0.3)' }}
             />
           </div>
@@ -79,32 +77,51 @@ export function ModuleCard({ module, onOpen, index }: Props) {
 
         <div className="flex items-start justify-between gap-4">
           <h3
-            className="text-[18px] leading-tight sm:text-[20px]"
+            className="text-[22px] leading-tight sm:text-[24px]"
             style={{ fontWeight: 300, letterSpacing: '-0.015em' }}
           >
             {module.name}
           </h3>
           <span
             aria-hidden
-            className="arrow shrink-0 text-white/55"
-            style={{ fontSize: 18 }}
+            className="arrow mt-1 shrink-0 text-white/55"
+            style={{ fontSize: 20 }}
           >
             →
           </span>
         </div>
 
-        <p
-          className="mt-1 text-[10px] uppercase"
-          style={{
-            letterSpacing: '0.22em',
-            color: 'rgba(255,255,255,0.5)',
-            fontWeight: 500,
-          }}
-        >
-          {hasVariants
-            ? `${module.variants.length} Varianten verfügbar`
-            : 'Einzelmodul'}
-        </p>
+        {/* Specifications as bullet list */}
+        {module.specifications.length > 0 && (
+          <ul className="mt-1 flex flex-col gap-2">
+            {module.specifications.map((spec) => (
+              <li
+                key={spec.label}
+                className="flex items-start gap-3 text-[13px] leading-relaxed sm:text-[14px]"
+                style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 300 }}
+              >
+                <span
+                  aria-hidden
+                  className="mt-[9px] inline-block h-[3px] w-[3px] shrink-0 rounded-full"
+                  style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}
+                />
+                <span>
+                  <span
+                    className="text-[10px] uppercase"
+                    style={{
+                      letterSpacing: '0.22em',
+                      color: 'rgba(255,255,255,0.45)',
+                      fontWeight: 500,
+                    }}
+                  >
+                    {spec.label}:
+                  </span>{' '}
+                  {spec.value}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </button>
   );

@@ -111,13 +111,8 @@ export function AreaPage() {
           {area.description}
         </p>
 
-        {/* Module grid */}
-        <div
-          className="mt-24 grid border-t border-l hairline md:mt-32"
-          style={{
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          }}
-        >
+        {/* Module grid — max 3 columns, wraps to new row beyond 3 items */}
+        <div className="mt-24 grid grid-cols-1 border-t border-l hairline sm:grid-cols-2 md:mt-32 lg:grid-cols-3">
           {modules.map((m, i) => (
             <div key={m.id} className="border-b border-r hairline">
               <ModuleCard module={m} onOpen={setActiveModule} index={i + 1} />

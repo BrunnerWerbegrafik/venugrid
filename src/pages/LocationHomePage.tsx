@@ -80,15 +80,10 @@ export function LocationHomePage() {
           daraus Ihre persönliche Anfrage zusammen.
         </p>
 
-        {/* Cards grid */}
-        <div
-          className="mt-24 grid border-t border-l hairline md:mt-32"
-          style={{
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          }}
-        >
+        {/* Rows — one area per row, image left, text right */}
+        <div className="mt-24 flex flex-col border-t hairline md:mt-32">
           {areas.map((area, i) => (
-            <div key={area.id} className="border-b border-r hairline">
+            <div key={area.id} className="border-b hairline">
               <AreaCard area={area} index={i + 1} locationSlug={location.slug} />
             </div>
           ))}
