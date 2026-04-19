@@ -20,11 +20,11 @@ export function AreaCard({ area, index, locationSlug }: Props) {
   return (
     <Link
       to={`/l/${locationSlug}/bereich/${area.id}`}
-      className="arrow-link group grid grid-cols-1 items-stretch transition-colors duration-200 hover:bg-white/[0.025] md:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]"
+      className="arrow-link group grid grid-cols-1 items-stretch transition-colors duration-200 hover:bg-white/[0.025] md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]"
     >
-      {/* Image column — fixed 16:10 aspect ratio, object-cover */}
-      <div className="relative overflow-hidden">
-        <div style={{ aspectRatio: '16 / 10' }} className="w-full">
+      {/* Image column — inset from the row edges; fixed 16:9 aspect ratio with object-cover */}
+      <div className="p-4 sm:p-5 md:py-6 md:pl-6 md:pr-4">
+        <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16 / 9' }}>
           <PlaceholderImage
             src={area.image.url}
             alt={area.image.alt}
@@ -36,7 +36,7 @@ export function AreaCard({ area, index, locationSlug }: Props) {
       </div>
 
       {/* Text column */}
-      <div className="flex flex-col justify-center gap-6 px-8 py-10 md:px-12 md:py-12 lg:px-16">
+      <div className="flex flex-col justify-center gap-4 px-6 pb-8 pt-2 md:gap-5 md:px-10 md:py-8 lg:px-12">
         {/* Chapter number */}
         <div className="flex items-center gap-4">
           <span
@@ -58,7 +58,7 @@ export function AreaCard({ area, index, locationSlug }: Props) {
 
         <div className="flex items-start justify-between gap-6">
           <h3
-            className="text-[32px] leading-tight sm:text-[40px] md:text-[44px] lg:text-[52px]"
+            className="text-[26px] leading-tight sm:text-[30px] md:text-[34px] lg:text-[38px]"
             style={{ fontWeight: 300, letterSpacing: '-0.02em' }}
           >
             {area.name}
@@ -66,14 +66,14 @@ export function AreaCard({ area, index, locationSlug }: Props) {
           <span
             aria-hidden
             className="arrow mt-2 shrink-0 text-white/55"
-            style={{ fontSize: 24 }}
+            style={{ fontSize: 22 }}
           >
             →
           </span>
         </div>
 
         <p
-          className="max-w-[520px] text-[14px] leading-relaxed sm:text-[15px] lg:text-[16px]"
+          className="max-w-[520px] text-[14px] leading-relaxed sm:text-[15px]"
           style={{ color: 'rgba(255,255,255,0.65)', fontWeight: 300 }}
         >
           {area.description}

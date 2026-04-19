@@ -24,33 +24,35 @@ export function ModuleCard({ module, onOpen, index }: Props) {
       onClick={() => onOpen(module)}
       className="arrow-link group flex h-full flex-col text-left transition-colors duration-200 hover:bg-white/[0.025]"
     >
-      {/* Image — fixed 16:10 aspect ratio */}
-      <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16 / 10' }}>
-        <PlaceholderImage
-          src={previewImage?.url ?? ''}
-          alt={previewImage?.alt ?? module.name}
-          placeholderGradient={
-            previewImage?.placeholderGradient ??
-            'linear-gradient(135deg, #1a2228 0%, #0a0e12 100%)'
-          }
-          fallbackLabel={module.name.toUpperCase()}
-          className="absolute inset-0 h-full w-full"
-        />
-        {hasVariants && (
-          <span
-            className="absolute right-4 top-4 inline-flex items-center border px-2.5 py-1 text-[10px] uppercase"
-            style={{
-              borderColor: 'rgba(255,255,255,0.35)',
-              color: 'rgba(255,255,255,0.85)',
-              backgroundColor: 'rgba(10,10,10,0.65)',
-              letterSpacing: '0.22em',
-              fontWeight: 500,
-              backdropFilter: 'blur(8px)',
-            }}
-          >
-            {module.variants.length} Varianten
-          </span>
-        )}
+      {/* Image — inset from the card edges so adjacent cards visually separate */}
+      <div className="px-5 pt-5 sm:px-6 sm:pt-6">
+        <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16 / 10' }}>
+          <PlaceholderImage
+            src={previewImage?.url ?? ''}
+            alt={previewImage?.alt ?? module.name}
+            placeholderGradient={
+              previewImage?.placeholderGradient ??
+              'linear-gradient(135deg, #1a2228 0%, #0a0e12 100%)'
+            }
+            fallbackLabel={module.name.toUpperCase()}
+            className="absolute inset-0 h-full w-full"
+          />
+          {hasVariants && (
+            <span
+              className="absolute right-4 top-4 inline-flex items-center border px-2.5 py-1 text-[10px] uppercase"
+              style={{
+                borderColor: 'rgba(255,255,255,0.35)',
+                color: 'rgba(255,255,255,0.85)',
+                backgroundColor: 'rgba(10,10,10,0.65)',
+                letterSpacing: '0.22em',
+                fontWeight: 500,
+                backdropFilter: 'blur(8px)',
+              }}
+            >
+              {module.variants.length} Varianten
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Text block */}
@@ -91,33 +93,26 @@ export function ModuleCard({ module, onOpen, index }: Props) {
           </span>
         </div>
 
-        {/* Specifications as bullet list */}
+        {/* Specifications — strictly left-aligned lines, no bullets */}
         {module.specifications.length > 0 && (
-          <ul className="mt-1 flex flex-col gap-2">
+          <ul className="mt-1 flex flex-col gap-2 text-left">
             {module.specifications.map((spec) => (
               <li
                 key={spec.label}
-                className="flex items-start gap-3 text-[13px] leading-relaxed sm:text-[14px]"
+                className="text-[13px] leading-relaxed sm:text-[14px]"
                 style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 300 }}
               >
                 <span
-                  aria-hidden
-                  className="mt-[9px] inline-block h-[3px] w-[3px] shrink-0 rounded-full"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}
-                />
-                <span>
-                  <span
-                    className="text-[10px] uppercase"
-                    style={{
-                      letterSpacing: '0.22em',
-                      color: 'rgba(255,255,255,0.45)',
-                      fontWeight: 500,
-                    }}
-                  >
-                    {spec.label}:
-                  </span>{' '}
-                  {spec.value}
-                </span>
+                  className="text-[10px] uppercase"
+                  style={{
+                    letterSpacing: '0.22em',
+                    color: 'rgba(255,255,255,0.45)',
+                    fontWeight: 500,
+                  }}
+                >
+                  {spec.label}:
+                </span>{' '}
+                {spec.value}
               </li>
             ))}
           </ul>
