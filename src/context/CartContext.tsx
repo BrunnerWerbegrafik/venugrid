@@ -30,6 +30,12 @@ interface CartContextValue {
   add: (entry: Omit<CartEntry, 'id' | 'addedAt' | 'quantity'>) => void;
   remove: (id: string) => void;
   clear: () => void;
+  // UI state: mini-cart drawer
+  drawerOpen: boolean;
+  openDrawer: () => void;
+  closeDrawer: () => void;
+  // id of the most recently added cart line — used to visually highlight it
+  recentlyAddedId: string | null;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -53,6 +59,8 @@ export function CartProvider({ locationSlug, children }: ProviderProps) {
       return [];
     }
   });
+  const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
+  const [recentlyAddedId, setRecentlyAddedId] = useState<string | null>(null);
 
   // Reload items when slug changes
   useEffect(() => {
@@ -76,15 +84,10 @@ export function CartProvider({ locationSlug, children }: ProviderProps) {
   const add = useCallback<CartContextValue['add']>((entry) => {
     const id = entry.variantId ? `${entry.moduleId}:${entry.variantId}` : entry.moduleId;
     setItems((prev) => {
-      const existingIdx = prev.findIndex((p) => p.id === id);
-      if (existingIdx >= 0) {
-        const next = [...prev];
-        next[existingIdx] = {
-          ...next[existingIdx],
-          quantity: next[existingIdx].quantity + 1,
-        };
-        return next;
-      }
+      // Same module + variant already in the cart → do not duplicate the entry.
+      // The UI has no quantity stepper in stage 1, so adding again is a no-op
+      // (the drawer still opens and the highlight still re-triggers below).
+      if (prev.some((p) => p.id === id)) return prev;
       return [
         ...prev,
         {
@@ -95,25 +98,44 @@ export function CartProvider({ locationSlug, children }: ProviderProps) {
         },
       ];
     });
+    setRecentlyAddedId(id);
+    setDrawerOpen(true);
   }, []);
 
   const remove = useCallback<CartContextValue['remove']>((id) => {
     setItems((prev) => prev.filter((e) => e.id !== id));
+    setRecentlyAddedId((curr) => (curr === id ? null : curr));
   }, []);
 
   const clear = useCallback(() => {
     setItems([]);
+    setRecentlyAddedId(null);
   }, []);
+
+  const openDrawer = useCallback(() => setDrawerOpen(true), []);
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+
+  // Clear the "recently added" highlight when the drawer is closed, so the
+  // highlight acts as a brief visual confirmation for this session's addition.
+  useEffect(() => {
+    if (!drawerOpen) setRecentlyAddedId(null);
+  }, [drawerOpen]);
 
   const value = useMemo<CartContextValue>(
     () => ({
       items,
-      count: items.reduce((sum, i) => sum + i.quantity, 0),
+      // Count = number of distinct cart lines. Stage 1 has no quantity stepper,
+      // so this matches the visible list exactly.
+      count: items.length,
       add,
       remove,
       clear,
+      drawerOpen,
+      openDrawer,
+      closeDrawer,
+      recentlyAddedId,
     }),
-    [items, add, remove, clear]
+    [items, add, remove, clear, drawerOpen, openDrawer, closeDrawer, recentlyAddedId]
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -22,9 +22,10 @@ export function ModuleCard({ module, onOpen, index }: Props) {
     <button
       type="button"
       onClick={() => onOpen(module)}
-      className="arrow-link group flex h-full flex-col text-left transition-colors duration-200 hover:bg-white/[0.025]"
+      className="group flex h-full w-full flex-col text-left transition-colors duration-200 hover:bg-white/[0.05]"
     >
-      {/* Image — inset from the card edges so adjacent cards visually separate */}
+      {/* Image — inset from all edges so adjacent cards visually separate.
+          Gentle zoom on hover (triggered from the button's group scope). */}
       <div className="px-5 pt-5 sm:px-6 sm:pt-6">
         <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16 / 10' }}>
           <PlaceholderImage
@@ -36,6 +37,7 @@ export function ModuleCard({ module, onOpen, index }: Props) {
             }
             fallbackLabel={module.name.toUpperCase()}
             className="absolute inset-0 h-full w-full"
+            imgClassName="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.08]"
           />
           {hasVariants && (
             <span
@@ -55,8 +57,8 @@ export function ModuleCard({ module, onOpen, index }: Props) {
         </div>
       </div>
 
-      {/* Text block */}
-      <div className="flex flex-1 flex-col gap-5 px-7 py-8">
+      {/* Text block — horizontal padding is double the image inset for a subtle indent */}
+      <div className="flex flex-1 flex-col gap-5 px-10 pb-8 pt-8 sm:px-12">
         {num && (
           <div className="flex items-center gap-3">
             <span
@@ -86,8 +88,8 @@ export function ModuleCard({ module, onOpen, index }: Props) {
           </h3>
           <span
             aria-hidden
-            className="arrow mt-1 shrink-0 text-white/55"
-            style={{ fontSize: 20 }}
+            className="mt-1 shrink-0 text-white/55 transition-all duration-300 ease-out group-hover:translate-x-3 group-hover:text-[#1fb3da]"
+            style={{ fontSize: 26 }}
           >
             →
           </span>

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { CartProvider } from './context/CartContext';
 import { TopNav } from './components/layout/TopNav';
 import { Footer } from './components/layout/Footer';
+import { CartDrawer } from './components/cart/CartDrawer';
 import { LocationHomePage } from './pages/LocationHomePage';
 import { AreaPage } from './pages/AreaPage';
 import { CartPage } from './pages/CartPage';
@@ -56,6 +57,7 @@ function LocationLayout() {
         </main>
         <Footer />
       </div>
+      <CartDrawer />
     </CartProvider>
   );
 }

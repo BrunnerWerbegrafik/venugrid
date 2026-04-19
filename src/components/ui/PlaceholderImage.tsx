@@ -40,9 +40,9 @@ export function PlaceholderImage({
         loading="lazy"
         onLoad={() => setLoaded(true)}
         onError={() => setErrored(true)}
-        className={`h-full w-full object-cover transition-opacity duration-300 ${
+        className={`h-full w-full transition-opacity duration-300 ${
           showFallback ? 'opacity-0' : 'opacity-100'
-        } ${imgClassName}`}
+        } ${imgClassName || 'object-cover'}`}
       />
       {showFallback && fallbackLabel && (
         <div className="pointer-events-none absolute inset-0 flex items-end p-4">

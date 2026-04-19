@@ -7,8 +7,8 @@
   --color-cyan: #1fb3da;
   --color-ink-900: #0a0a0a;
   --color-ink-800: #111111;
-  --hairline: rgba(255, 255, 255, 0.08);
-  --hairline-strong: rgba(255, 255, 255, 0.2);
+  --hairline: rgba(255, 255, 255, 0.14);
+  --hairline-strong: rgba(255, 255, 255, 0.25);
   --text-muted: rgba(255, 255, 255, 0.7);
   --text-dim: rgba(255, 255, 255, 0.5);
   --text-faint: rgba(255, 255, 255, 0.2);

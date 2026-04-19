@@ -27,8 +27,8 @@ export function TopNav({ locationName, locationSlug }: Props) {
             <span>VENU</span>
             <span
               aria-hidden
-              className="mx-[0.35em] inline-block h-[6px] w-[6px] rounded-full"
-              style={{ backgroundColor: '#1fb3da' }}
+              className="inline-block h-[6px] w-[6px] rounded-full"
+              style={{ backgroundColor: '#1fb3da', marginLeft: '0.42em', marginRight: '0.35em' }}
             />
             <span>GRID</span>
           </span>

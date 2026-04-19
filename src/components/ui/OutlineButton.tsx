@@ -24,7 +24,7 @@ export function OutlineButton({
       {trailing ? (
         <span
           aria-hidden
-          className="transition-transform duration-200 group-hover:translate-x-1"
+          className="transition-transform duration-300 ease-out group-hover:translate-x-2"
         >
           {trailing}
         </span>
