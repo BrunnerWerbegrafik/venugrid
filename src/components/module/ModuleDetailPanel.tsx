@@ -164,7 +164,10 @@ export function ModuleDetailPanel({
           {/* On mobile: single scrollable stack (image → content). On desktop:
               spans ONLY the left column of the 2-column grid, image column. */}
           <div className="flex flex-col gap-6 overflow-y-auto border-b hairline p-6 pb-36 sm:p-8 sm:pb-40 md:border-b-0 md:border-r md:p-10 md:pb-10 lg:p-12 lg:pb-12">
-            <div className="relative w-full overflow-hidden" style={{ aspectRatio: '4 / 3' }}>
+            <div
+              className="relative w-full shrink-0 overflow-hidden"
+              style={{ aspectRatio: '4 / 3' }}
+            >
               <PlaceholderImage
                 src={mainImage?.url ?? ''}
                 alt={mainImage?.alt ?? module.name}
