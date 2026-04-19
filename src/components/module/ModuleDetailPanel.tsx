@@ -127,15 +127,43 @@ export function ModuleDetailPanel({
       />
 
       {/* Panel container — small outer padding so the panel feels like a
-          full-screen modal with breathing room on large monitors */}
+          full-screen modal with breathing room on large monitors. */}
       <div className="panel-enter absolute inset-0 flex p-0 md:p-6 lg:p-10">
         <div
           ref={panelRef}
           tabIndex={-1}
           className="relative flex h-full w-full flex-col overflow-hidden border hairline bg-[#0a0a0a] md:grid md:grid-cols-[1.1fr_520px] md:grid-rows-1 lg:grid-cols-[1.2fr_620px] xl:grid-cols-[1.3fr_720px]"
         >
-          {/* LEFT — Image column: 4:3 main image with fullscreen button + optional thumbnails */}
-          <div className="flex flex-col gap-6 overflow-y-auto border-b hairline p-6 sm:p-8 md:border-b-0 md:border-r md:p-10 lg:p-12">
+          {/* Mobile-only top bar with close button (always accessible) */}
+          <div
+            className="sticky top-0 z-10 flex items-center justify-between border-b hairline bg-[#0a0a0a] px-6 py-4 md:hidden"
+            style={{ backgroundColor: 'rgba(10,10,10,0.95)', backdropFilter: 'blur(8px)' }}
+          >
+            <span
+              className="text-[10px] uppercase"
+              style={{
+                letterSpacing: '0.28em',
+                color: 'rgba(255,255,255,0.6)',
+                fontWeight: 500,
+              }}
+            >
+              {areaLabel}
+            </span>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Schließen"
+              className="inline-flex h-[32px] w-[32px] shrink-0 items-center justify-center border border-white/25 text-white/75 transition-colors hover:border-[#1fb3da] hover:text-[#1fb3da]"
+            >
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+                <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" strokeWidth="1" />
+              </svg>
+            </button>
+          </div>
+
+          {/* On mobile: single scrollable stack (image → content). On desktop:
+              spans ONLY the left column of the 2-column grid, image column. */}
+          <div className="flex flex-col gap-6 overflow-y-auto border-b hairline p-6 pb-36 sm:p-8 sm:pb-40 md:border-b-0 md:border-r md:p-10 md:pb-10 lg:p-12 lg:pb-12">
             <div className="relative w-full overflow-hidden" style={{ aspectRatio: '4 / 3' }}>
               <PlaceholderImage
                 src={mainImage?.url ?? ''}
@@ -257,10 +285,76 @@ export function ModuleDetailPanel({
                 </div>
               </div>
             )}
+
+            {/* MOBILE: Content block inline with image (scrolls as one).
+                On desktop this block is hidden because the content lives in
+                its own column. */}
+            <div className="mt-4 flex flex-col gap-10 md:hidden">
+              {/* Mobile header (title + area, close is in the top bar) */}
+              <div className="flex flex-col gap-4">
+                <h3
+                  id="module-panel-title"
+                  className="text-[30px] leading-[1.04] sm:text-[36px]"
+                  style={{ fontWeight: 300, letterSpacing: '-0.02em' }}
+                >
+                  {module.name}
+                </h3>
+              </div>
+
+              {hasVariants && (
+                <VariantSelector
+                  variants={module.variants}
+                  activeVariantId={activeVariantId}
+                  onSelect={setActiveVariantId}
+                />
+              )}
+
+              <p
+                className="text-[15px] leading-[1.7] sm:text-[16px]"
+                style={{ color: 'rgba(255,255,255,0.75)', fontWeight: 300 }}
+              >
+                {module.longDescription}
+              </p>
+
+              {/* Specs — stacked vertically on mobile */}
+              <div
+                className="flex flex-col border-y hairline"
+                style={{ borderColor: 'rgba(255,255,255,0.14)' }}
+              >
+                {module.specifications.map((spec, i) => (
+                  <div
+                    key={spec.label}
+                    className={
+                      'flex flex-col gap-2 py-5 ' +
+                      (i < module.specifications.length - 1
+                        ? 'border-b hairline'
+                        : '')
+                    }
+                  >
+                    <span
+                      className="text-[10px] uppercase"
+                      style={{
+                        letterSpacing: '0.28em',
+                        color: 'rgba(255,255,255,0.5)',
+                        fontWeight: 500,
+                      }}
+                    >
+                      {spec.label}
+                    </span>
+                    <span
+                      className="text-[15px]"
+                      style={{ fontWeight: 300 }}
+                    >
+                      {spec.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* RIGHT — Content column */}
-          <div className="flex flex-col md:h-full">
+          {/* DESKTOP content column — hidden on mobile (content there is inlined above) */}
+          <div className="hidden flex-col md:flex md:h-full">
             {/* Scrollable body */}
             <div className="flex-1 overflow-y-auto px-8 py-10 sm:px-10 sm:py-12 md:px-12 md:py-14">
               {/* Header */}
@@ -277,7 +371,6 @@ export function ModuleDetailPanel({
                     {areaLabel}
                   </span>
                   <h3
-                    id="module-panel-title"
                     className="text-[30px] leading-[1.04] sm:text-[36px] lg:text-[44px]"
                     style={{ fontWeight: 300, letterSpacing: '-0.02em' }}
                   >
@@ -306,7 +399,6 @@ export function ModuleDetailPanel({
                 </button>
               </div>
 
-              {/* Variants */}
               {hasVariants && (
                 <div className="mt-12">
                   <VariantSelector
@@ -317,7 +409,6 @@ export function ModuleDetailPanel({
                 </div>
               )}
 
-              {/* Description */}
               <p
                 className="mt-12 text-[15px] leading-[1.7] sm:text-[16px]"
                 style={{ color: 'rgba(255,255,255,0.75)', fontWeight: 300 }}
@@ -325,7 +416,6 @@ export function ModuleDetailPanel({
                 {module.longDescription}
               </p>
 
-              {/* Specs */}
               <div
                 className="mt-12 grid grid-cols-3 gap-0 border-y hairline"
                 style={{ borderColor: 'rgba(255,255,255,0.14)' }}
@@ -353,7 +443,7 @@ export function ModuleDetailPanel({
               </div>
             </div>
 
-            {/* Sticky footer CTA */}
+            {/* Desktop CTA — pinned to bottom of content column */}
             <div className="border-t hairline px-8 py-6 sm:px-10 md:px-12">
               <CyanButton
                 onClick={handleAdd}
@@ -364,6 +454,21 @@ export function ModuleDetailPanel({
                 {addState === 'added' ? 'Hinzugefügt' : 'Zur Anfrage hinzufügen'}
               </CyanButton>
             </div>
+          </div>
+
+          {/* MOBILE sticky CTA at the bottom of the viewport */}
+          <div
+            className="absolute bottom-0 left-0 right-0 z-10 border-t hairline px-6 py-5 md:hidden"
+            style={{ backgroundColor: 'rgba(10,10,10,0.95)', backdropFilter: 'blur(10px)' }}
+          >
+            <CyanButton
+              onClick={handleAdd}
+              fullWidth
+              variant={addState === 'added' ? 'confirmed' : 'solid'}
+              trailing={addState === 'added' ? '✓' : '+'}
+            >
+              {addState === 'added' ? 'Hinzugefügt' : 'Zur Anfrage hinzufügen'}
+            </CyanButton>
           </div>
         </div>
       </div>

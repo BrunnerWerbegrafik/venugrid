@@ -80,15 +80,17 @@ export function LocationHomePage() {
           daraus Ihre persönliche Anfrage zusammen.
         </p>
 
-        {/* Rows — one area per row, image left, text right. Full border around the row
-            so the hairlines are closed left and right (not open to the section edges).
-            Hover background is applied on the wrapper so the fill covers the full row
-            including the area down to the border. */}
-        <div className="mt-24 flex flex-col border-x border-t hairline md:mt-32">
+        {/* Rows — one area per row, image left, text right.
+            - Desktop (md+): rows form a single block with hairlines closed on all sides;
+              only bottom hairline between rows.
+            - Mobile (< md): rows are visually separated with a small gap so the end of
+              one card and the start of the next is easy to recognize. Each card gets
+              its own full border. */}
+        <div className="mt-24 flex flex-col gap-5 hairline md:mt-32 md:gap-0 md:border-x md:border-t">
           {areas.map((area, i) => (
             <div
               key={area.id}
-              className="border-b hairline transition-colors duration-200 hover:bg-white/[0.05]"
+              className="border hairline transition-colors duration-200 hover:bg-white/[0.05] md:border-x-0 md:border-t-0 md:border-b"
             >
               <AreaCard area={area} index={i + 1} locationSlug={location.slug} />
             </div>
